@@ -25,7 +25,7 @@
 
 cmake_minimum_required(VERSION 3.6)
 
-set(APP_NAME cocos2d-game)
+set(APP_NAME cocos2d-game-template)
 
 project(${APP_NAME})
 
