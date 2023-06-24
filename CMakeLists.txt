@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 # ****************************************************************************/
 
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.13)
 
 set(APP_NAME cocos2d-game-template)
 
@@ -35,12 +35,28 @@ if(XCODE)
     endif()
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test cocos2d-game into root project
-    set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
-    set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test game into root project
+    if(XCODE)
+        set(CMAKE_XCODE_GENERATE_TOP_LEVEL_PROJECT_ONLY TRUE)
+    endif()
+
+    set(_COCOS_X_ROOT "$ENV{COCOS_X_ROOT}")
+
+    if(NOT (_COCOS_X_ROOT STREQUAL ""))
+        set(_COCOS_X_ROOT_PATH "${_COCOS_X_ROOT}/cocos2d-x")
+        set(_COCOS_X_ROOT "${_COCOS_X_ROOT}/cocos2d-x")
+        file(TO_CMAKE_PATH ${_COCOS_X_ROOT_PATH} _COCOS_X_ROOT_PATH) # string(REPLACE "\\" "/" _COCOS_X_ROOT_PATH ${_COCOS_X_ROOT_PATH})
+        message(STATUS "Using system env var _COCOS_X_ROOT=${_COCOS_X_ROOT}")
+    else()
+        message(FATAL_ERROR "Please run setup.py into engine folder to add system env var 'COCOS_X_ROOT' to specific the engine root")
+    endif()
+
+    set(CMAKE_MODULE_PATH ${_COCOS_X_ROOT_PATH}/cmake/Modules/)
 
     include(CocosBuildSet)
-    add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
+
+    set(COCOS2DX_ROOT_PATH ${_COCOS_X_ROOT_PATH})
+    add_subdirectory(${_COCOS_X_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
 endif()
 
 # record sources, headers, resources...
