@@ -144,11 +144,16 @@ else()
     target_link_libraries(${APP_NAME} -Wl,--whole-archive cpp_android_spec -Wl,--no-whole-archive)
 endif()
 
-target_link_libraries(${APP_NAME} cocos2d)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/fairygui)
+
+target_link_libraries(${APP_NAME} cocos2d ${FAIRYGUI_LIB_NAME})
 target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
+        PRIVATE ${FAIRYGUI_INCLUDE_DIR}
 )
+target_compile_features(${APP_NAME} PRIVATE cxx_std_17)
+target_compile_options(${APP_NAME} PRIVATE -Wall)
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})

@@ -1,0 +1,3 @@
+[submodule "thirdparty/fairygui"]
+	path = thirdparty/fairygui
+	url = git@github.com:efreyu/FairyGUI-cocos2dx.git
